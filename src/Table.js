@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
-export default function Table({ data, updateData }) {
+export default function Table({ data, updateData, activeName }) {
 
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
@@ -48,8 +48,16 @@ export default function Table({ data, updateData }) {
   const renderRows = () => {
     return (
       data.map(student => {
+        const background = student.name === activeName ? '#F0F0F0' : 'lightblue'
         return (
-          <Row key={student.name} style={{ marginTop: "10px" }}>
+          <Row key={student.name}
+            style={{
+              marginTop: "10px",
+              backgroundColor: background,
+              borderRadius: "5px",
+              padding: "5px 0px"
+            }}
+          >
             <Col xs={3} style={{ textAlign: 'center' }}>{student.name}</Col>
             <Col xs={3} style={{ textAlign: 'center' }}>{student.age}</Col>
             <Col xs={3} style={{ textAlign: 'center' }}>{student.height}</Col>
@@ -63,7 +71,7 @@ export default function Table({ data, updateData }) {
                 onClick={(e) => removePerson(e)}
               >Remove</Button>
             </Col>
-          </Row>
+          </Row >
         )
       })
     )

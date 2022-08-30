@@ -11,10 +11,13 @@ import Table from './Table';
 const URL = "https://scatterplot-d9e41-default-rtdb.firebaseio.com/.json";
 
 class App extends Component {
+  //app states
   state = {
-    data: []
+    data: [],
+    activeName: null
   };
 
+  //EFFECTS: fetch data on initial render 
   componentDidMount() {
     json(URL)
       .then(data => this.setState({ data }))
@@ -22,15 +25,24 @@ class App extends Component {
       .finally(() => "cleanup")
   };
 
+  //EFFECTS: returns chart component if data has been fetched, returns string otherwise
   renderChart() {
     if (this.state.data.length === 0) {
       return "NO DATA YET"
     }
-    return <ChartWrapper data={this.state.data} />;
+    return <ChartWrapper data={this.state.data}
+      updateData={this.updateData}
+      updateName={this.updateName} />;
   }
 
+  //EFFECTS: updates data state
   updateData = (newData) => {
     this.setState({ data: newData });
+  }
+
+  //EFFECTS: updates name state
+  updateName = (name) => {
+    this.setState({ activeName: name })
   }
 
   render() {
@@ -42,7 +54,11 @@ class App extends Component {
         <Container>
           <Row>
             <Col md={6} xs={12}>{this.renderChart()}</Col>
-            <Col md={6} xs={12}><Table data={this.state.data} updateData={this.updateData} /></Col>
+            <Col md={6} xs={12}>
+              <Table data={this.state.data}
+                updateData={this.updateData}
+                activeName={this.state.activeName} />
+            </Col>
           </Row>
         </Container>
       </div>

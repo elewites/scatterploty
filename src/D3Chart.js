@@ -9,9 +9,9 @@ const HEIGHT = 300 - MARGIN.TOP - MARGIN.BOTTOM
 
 console.log(WIDTH)
 class D3Chart {
-	constructor(element, data) {
+	constructor(element, data, updateName) {
 		let vis = this;
-		//vis.data = data;
+		vis.updateName = updateName;
 
 		//scales
 		vis.x = d3.scaleLinear()
@@ -56,7 +56,6 @@ class D3Chart {
 
 		vis.x.domain([0, d3.max(vis.data, d => Number(d.age))]);
 		vis.y.domain([0, d3.max(vis.data, d => Number(d.height))]);
-		//console.log(vis.y(140))
 
 		const xAxisCall = d3.axisBottom(vis.x);
 		const yAxisCall = d3.axisLeft(vis.y);
@@ -65,9 +64,8 @@ class D3Chart {
 
 		//circles
 		const circles = vis.g.selectAll('circle').data(vis.data, d => d.name);
-		console.log(circles);
 
-		circles.join(
+		const joined = circles.join(
 			function (enter) {
 				return enter
 					.append('circle')
@@ -76,9 +74,12 @@ class D3Chart {
 					.attr('cx', d => vis.x(d.age))
 					.attr('r', 10)
 					.attr('fill', 'red')
+					.on('click', d => {
+						//vis.updateName(d.name);
+					})
 					.call(enter => enter.transition(1000)
 						//.attr('cy', d => vis.y(d.height))
-						.attr('r', 5)
+						.attr('r', 6)
 						.attr('fill', 'grey'))
 			},
 
@@ -86,7 +87,7 @@ class D3Chart {
 				return update.transition(1000)
 					.attr('cx', d => vis.x(d.age))
 					.attr('cy', d => vis.y(d.height))
-					.attr('r', 5)
+					.attr('r', 6)
 					.attr('fill', 'grey')
 			},
 
@@ -97,6 +98,26 @@ class D3Chart {
 					.remove();
 			}
 		)
+
+		console.log(joined)
+
+		joined.on('mouseenter', function (d) {
+			console.log(d)
+			d3.select(this)
+				.style('fill', 'orange')
+				.attr('r', 7)
+			vis.updateName(d.name);
+
+			//circle.attr('fill', 'orange')
+			//circle.style('background-color', 'red')
+			//d3.select(this).style('fill', 'orange')
+		})
+			.on('mouseout', function () {
+				d3.select(this).style('fill', 'grey')
+					.attr('r', 6)
+				vis.updateName(null)
+			})
+
 
 	}
 }
