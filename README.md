@@ -6,4 +6,5 @@ The data is displayed on scatterplot, plotting the age of the given person on x-
 
 ## Functionality
 The user is able to add and remove data as they please. 
+
 The user is able to hover over a specific data point in the scatterplot to see to which row it corresponds on the tabular representation of the data. 
